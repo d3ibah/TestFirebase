@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,8 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextMail, editTextPass;
     private Button buttonSignIn, buttonReg;
 
-    private static final String TAG = "EmailPassword";
-
     private FirebaseAuth mAuth;
 
     @Override
@@ -36,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         buttonReg = findViewById(R.id.buttonReg);
 
         mAuth = FirebaseAuth.getInstance();
-
-        FirebaseAuth.AuthStateListener authStateListener;
     }
 
     @Override
@@ -58,31 +53,18 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, RegistrationFormActivity.class);
                 intent.putExtra("regMail", editTextMail.getText().toString());
                 intent.putExtra("regPass", editTextPass.getText().toString());
-
                 startActivity(intent);
-//                createAccount(editTextMail.getText().toString(), editTextPass.getText().toString());
             }
         });
-
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
-
-
     private void signIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
-
-        // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Log.e(TAG, user.getEmail());
                             Toast.makeText(MainActivity.this, "Sign In is successful." + user.getEmail(),
                                     Toast.LENGTH_SHORT).show();
 
@@ -90,13 +72,10 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent);
 
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-        // [END sign_in_with_email]
     }
 }

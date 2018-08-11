@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,17 +16,27 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import by.testfirebase.dataModel.Article;
 import by.testfirebase.dataModel.User;
 
 public class RegistrationFormActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
+    public static final String USERS_CHILD = "usersList";
     private Button buttonReg;
     private EditText etMail, etPass, etName, etSurname, etAge;
+    private String userMail, userPassword, userName, userSurname, userGender, userAge;
+    private RadioButton radioButtonMale, radioButtonFemale;
+
+    private FirebaseAuth mAuth;
+
+    private DatabaseReference databaseReference;
+
+    public static final String MALE = "male";
+    public static final String FEMALE = "female";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +48,12 @@ public class RegistrationFormActivity extends AppCompatActivity {
         etPass = findViewById(R.id.etPass);
         etName = findViewById(R.id.etName);
         etSurname = findViewById(R.id.etSurname);
+        radioButtonMale = findViewById(R.id.radioButtonMale);
+        radioButtonFemale = findViewById(R.id.radioButtonFemale);
         etAge = findViewById(R.id.etAge);
 
         mAuth = FirebaseAuth.getInstance();
 
-        //RTIjh2VEY2e9uVhEX0vu9UttsKp2
     }
 
     @Override
@@ -51,17 +63,43 @@ public class RegistrationFormActivity extends AppCompatActivity {
         etMail.setText(getIntent().getStringExtra("regMail"));
         etPass.setText(getIntent().getStringExtra("regPass"));
 
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD);
+
+        View.OnClickListener radioButtonClckListnr = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RadioButton rb = (RadioButton) view;
+                switch (rb.getId()) {
+                    case R.id.radioButtonMale:
+                        userGender = MALE;
+                        break;
+                    case R.id.radioButtonFemale:
+                        userGender = FEMALE;
+                        break;
+                }
+            }
+        };
+
+        radioButtonMale.setOnClickListener(radioButtonClckListnr);
+        radioButtonFemale.setOnClickListener(radioButtonClckListnr);
+
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createAccount(etMail.getText().toString(), etPass.getText().toString());
+
+                userMail = etMail.getText().toString();
+                userPassword = etPass.getText().toString();
+                userName = etName.getText().toString();
+                userSurname = etSurname.getText().toString();
+                userAge = etAge.getText().toString();
+                createAccount(userMail, userPassword, userName, userSurname, userGender, userAge);
 
 
             }
         });
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(final String email, final String password, final String name, final String surname, final String gender, final String age) {
         Log.d(TAG, "createAccount:" + email);
 
         // [START create_user_with_email]
@@ -78,7 +116,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
 
                             FirebaseDatabase.getInstance().getReference().push()
-                                    .setValue(new User(FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(),etName.getText().toString(), etSurname.getText().toString(), etAge.getText().toString()));
+                                    .setValue(new User(FirebaseAuth.getInstance().getCurrentUser().getUid(), email, password, name, surname, gender, age));
 
                             Intent intent = new Intent(RegistrationFormActivity.this, AddAndShowActivity.class);
                             startActivity(intent);

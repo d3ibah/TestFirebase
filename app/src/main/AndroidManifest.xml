@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegistrationFormActivity" />
-        <activity android:name=".AddAndShowActivity"></activity>
+        <activity android:name=".AddAndShowActivity" />
+        <activity android:name=".ShowUserActivity"></activity>
     </application>
 
 </manifest>
