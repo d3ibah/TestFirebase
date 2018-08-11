@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     private EditText editTextMail, editTextPass;
-    private Button buttonSignIn, buttonReg;
+    private Button buttonSignIn, buttonReg, buttonNavDr;
 
     private FirebaseAuth mAuth;
 
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         editTextPass = findViewById(R.id.editTextPass);
         buttonSignIn = findViewById(R.id.buttonSignIn);
         buttonReg = findViewById(R.id.buttonReg);
+        buttonNavDr = findViewById(R.id.buttonNavDr);
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -53,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, RegistrationFormActivity.class);
                 intent.putExtra("regMail", editTextMail.getText().toString());
                 intent.putExtra("regPass", editTextPass.getText().toString());
+                startActivity(intent);
+            }
+        });
+
+        buttonNavDr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                 startActivity(intent);
             }
         });

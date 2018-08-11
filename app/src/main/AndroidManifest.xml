@@ -20,7 +20,11 @@
         </activity>
         <activity android:name=".RegistrationFormActivity" />
         <activity android:name=".AddAndShowActivity" />
-        <activity android:name=".ShowUserActivity"></activity>
+        <activity android:name=".ShowUserActivity" />
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
