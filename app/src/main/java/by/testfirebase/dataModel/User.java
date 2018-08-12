@@ -25,7 +25,7 @@ public class User {
     public User() {
     }
 
-    public String geteMail() {
+    public String getEmail() {
         return eMail;
     }
 

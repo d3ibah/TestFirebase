@@ -86,17 +86,20 @@ public class RegistrationFormActivity extends AppCompatActivity {
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                userMail = etMail.getText().toString();
-                userPassword = etPass.getText().toString();
-                userName = etName.getText().toString();
-                userSurname = etSurname.getText().toString();
-                userAge = etAge.getText().toString();
+                acceptFromFieldsInfo();
                 createAccount(userMail, userPassword, userName, userSurname, userGender, userAge);
 
 
             }
         });
+    }
+
+    private void acceptFromFieldsInfo() {
+        userMail = etMail.getText().toString();
+        userPassword = etPass.getText().toString();
+        userName = etName.getText().toString();
+        userSurname = etSurname.getText().toString();
+        userAge = etAge.getText().toString();
     }
 
     private void createAccount(final String email, final String password, final String name, final String surname, final String gender, final String age) {

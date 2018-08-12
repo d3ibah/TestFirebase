@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +20,7 @@
         </activity>
         <activity android:name=".RegistrationFormActivity" />
         <activity android:name=".AddAndShowActivity" />
-        <activity android:name=".ShowUserActivity" />
+        <activity android:name=".FragmentUserInfo" />
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
