@@ -4,14 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,7 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import by.testfirebase.dataModel.Article;
@@ -29,6 +30,7 @@ public class FragmentShowBlog extends Fragment{
     public static final String MESSAGES_CHILD = "messages";
     private DatabaseReference databaseReference;
     private RecyclerView recyclerView;
+    private Button buttonGoToFragmentAdd;
     private LinearLayoutManager linearLayoutManager;
     private List<Article> articleArrayList = new ArrayList<>();
     private ShowAdapter showAdapter;
@@ -42,6 +44,7 @@ public class FragmentShowBlog extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_show_blog, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
+        buttonGoToFragmentAdd = rootView.findViewById(R.id.buttonGoToAdd);
 
         userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child(MESSAGES_CHILD).child(userUId);
@@ -54,7 +57,12 @@ public class FragmentShowBlog extends Fragment{
         showAdapter = new ShowAdapter(articleArrayList);
         recyclerView.setAdapter(showAdapter);
 
-
+        buttonGoToFragmentAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showFragmentAdd(false);
+            }
+        });
 
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -88,5 +96,16 @@ public class FragmentShowBlog extends Fragment{
         });
 
         return rootView;
+    }
+
+    public void showFragmentAdd(boolean addToBackStack) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentAdd fragment = new FragmentAdd();
+        fragmentTransaction.replace(R.id.container, fragment, null);
+//        if (addToBackStack) {
+//            fragmentTransaction.addToBackStack(null);
+//        }
+        fragmentTransaction.commit();
     }
 }

@@ -6,8 +6,8 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Notes" />
+            android:icon="@drawable/ic_library_books_black_24dp"
+            android:title="Home" />
         <item
             android:id="@+id/nav_add"
             android:icon="@drawable/ic_note_add_black_24dp_add"
@@ -20,15 +20,6 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_cancel_black_24dp_logout"
             android:title="Logout" />
-    </group>
-
-    <group android:checkableBehavior="single">
-    <menu>
-        <item
-            android:id="@+id/nav_logout1"
-            android:icon="@drawable/ic_cancel_black_24dp_logout"
-            android:title="Logout" />
-    </menu>
     </group>
 
 </menu>

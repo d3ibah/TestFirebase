@@ -33,7 +33,6 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.AasViewHolder>
         Article article = articleList.get(position);
 
         holder.textMessage.setText(article.getTextMessage());
-        holder.textIdUser.setText(article.getUserId());
         holder.textDate.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", article.getTimeMessage()));
 
 
@@ -45,13 +44,12 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.AasViewHolder>
     }
 
     public class AasViewHolder extends RecyclerView.ViewHolder{
-        TextView textDate, textIdUser, textMessage;
+        TextView textDate, textMessage;
 
         public AasViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textDate = itemView.findViewById(R.id.textViewDate);
-            textIdUser = itemView.findViewById(R.id.textViewIdUser);
             textMessage = itemView.findViewById(R.id.textViewMessage);
         }
     }
