@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,17 +10,21 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:background="#bdbdbdbd"
+        android:drawableEnd="@drawable/ic_playlist_add_black_24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
         android:text="Add new post"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+        android:textSize="16sp" />
 
     <android.support.v7.widget.RecyclerView
 
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        tools:layout="@layout/add_and_show_item_recyclerview">
 
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>

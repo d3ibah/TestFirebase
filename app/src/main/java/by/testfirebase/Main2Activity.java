@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -38,16 +39,15 @@ public class Main2Activity extends AppCompatActivity
     private DatabaseReference databaseReference;
     public static final String USERS_CHILD = "usersList";
     private String userUId;
-    private Bundle savedInstanceState;
+//    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        this.savedInstanceState = savedInstanceState;
+//        this.savedInstanceState = savedInstanceState;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         drawer = findViewById(R.id.drawer_layout);
@@ -89,21 +89,32 @@ public class Main2Activity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+       Fragment fragment = null;
+        Class fragmentClass = null;
+
         if (id == R.id.nav_home) {
-            if (savedInstanceState == null) {
-                showFragmentBlog(false);
-            }
+            fragmentClass = FragmentShowBlog.class;
 
         } else if (id == R.id.nav_add) {
-
-            if (savedInstanceState == null) {
-                showFragmentAdd(false);
-            }
+            fragmentClass = FragmentAdd.class;
 
         } else if (id == R.id.nav_profile) {
-            if (savedInstanceState == null) {
-                showFragmentUserInfo(false);
-            }
+            fragmentClass = FragmentUserInfo.class;
+//        if (id == R.id.nav_home) {
+//            if (savedInstanceState == null) {
+//                showFragmentBlog(false);
+//            }
+//
+//        } else if (id == R.id.nav_add) {
+//
+//            if (savedInstanceState == null) {
+//                showFragmentAdd(false);
+//            }
+//
+//        } else if (id == R.id.nav_profile) {
+//            if (savedInstanceState == null) {
+//                showFragmentUserInfo(false);
+//            }
 
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
@@ -111,6 +122,18 @@ public class Main2Activity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
+
+        try {
+            fragment = (Fragment)fragmentClass.newInstance();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+        item.setCheckable(true);
+        setTitle(item.getTitle());
 
 
         drawer.closeDrawer(GravityCompat.START);
@@ -151,7 +174,7 @@ public class Main2Activity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    private void changeNavHeader(){
+    private void changeNavHeader() {
         tvUserMail.setText(mAuth.getCurrentUser().getEmail());
 
         databaseReference.addChildEventListener(new ChildEventListener() {
