@@ -2,6 +2,8 @@ package by.testfirebase;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,8 +14,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import by.testfirebase.dataModel.User;
 
 
 public class Main2Activity extends AppCompatActivity
@@ -21,14 +32,23 @@ public class Main2Activity extends AppCompatActivity
 
     private DrawerLayout drawer;
 
+    private TextView tvUserName, tvUserMail;
+
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
+    public static final String USERS_CHILD = "usersList";
+    private String userUId;
+    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        this.savedInstanceState = savedInstanceState;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -39,11 +59,18 @@ public class Main2Activity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        drawer.openDrawer(GravityCompat.START);
 
         mAuth = FirebaseAuth.getInstance();
+        userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD).child(userUId);
 
         showFragmentBlog(false);
+
+        View headerLayout = navigationView.getHeaderView(0);
+        tvUserMail = headerLayout.findViewById(R.id.tvUserMail);
+        tvUserName = headerLayout.findViewById(R.id.tvUserName);
+
+        changeNavHeader();
 
     }
 
@@ -60,23 +87,23 @@ public class Main2Activity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-
-            showFragmentBlog(false);
+            if (savedInstanceState == null) {
+                showFragmentBlog(false);
+            }
 
         } else if (id == R.id.nav_add) {
 
-//            if (savedInstanceState == null) {
-//                showFragmentAdd(false);
-//            }
-            showFragmentAdd(false);
+            if (savedInstanceState == null) {
+                showFragmentAdd(false);
+            }
 
         } else if (id == R.id.nav_profile) {
-
-            showFragmentUserInfo(false);
+            if (savedInstanceState == null) {
+                showFragmentUserInfo(false);
+            }
 
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
@@ -96,33 +123,64 @@ public class Main2Activity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         FragmentAdd fragment = new FragmentAdd();
         fragmentTransaction.replace(R.id.container, fragment, null);
-//        if (addToBackStack) {
-//            fragmentTransaction.addToBackStack(null);
-//        }
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commit();
     }
 
     public void showFragmentBlog(boolean addToBackStack) {
-        Log.e("AAAA", "showFragMain");
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         FragmentShowBlog fragment = new FragmentShowBlog();
         fragmentTransaction.replace(R.id.container, fragment, null);
-//        if (addToBackStack) {
-//            fragmentTransaction.addToBackStack(null);
-//        }
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commit();
     }
 
     public void showFragmentUserInfo(boolean addToBackStack) {
-        Log.e("AAAA", "showFragMain");
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         FragmentUserInfo fragment = new FragmentUserInfo();
         fragmentTransaction.replace(R.id.container, fragment, null);
-//        if (addToBackStack) {
-//            fragmentTransaction.addToBackStack(null);
-//        }
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commit();
+    }
+
+    private void changeNavHeader(){
+        tvUserMail.setText(mAuth.getCurrentUser().getEmail());
+
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                User user = dataSnapshot.getValue(User.class);
+                String fullName = (user.getName() + " " + user.getSurname());
+                tvUserName.setText(fullName);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
