@@ -2,6 +2,8 @@ package by.testfirebase;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,12 +24,13 @@ public class AuthActivity extends AppCompatActivity {
 
     private EditText editTextMail, editTextPass;
     private Button buttonSignIn, buttonReg, buttonNavDr;
-    ImageView ivVisiblePass;
+    ImageView ivVisiblePass, ivInfo;
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
     private boolean flagShowPass = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class AuthActivity extends AppCompatActivity {
         buttonReg = findViewById(R.id.buttonReg);
         buttonNavDr = findViewById(R.id.buttonNavDr);
         ivVisiblePass = findViewById(R.id.ivShowHide);
+        ivInfo = findViewById(R.id.ivInfo);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -49,6 +53,16 @@ public class AuthActivity extends AppCompatActivity {
             startActivity(new Intent(this, Main2Activity.class));
             finish();
         }
+
+        ivInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getSupportFragmentManager();
+                DialogInfo dialogInfo = new DialogInfo();
+                FragmentTransaction transaction = manager.beginTransaction();
+                dialogInfo.show(transaction, "dialog1");
+            }
+        });
     }
 
     @Override
@@ -58,11 +72,10 @@ public class AuthActivity extends AppCompatActivity {
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkEditFilds();
-                if (checkEditFilds()) {
-
-                    signIn(editTextMail.getText().toString(), editTextPass.getText().toString());
+                if (!checkEditFilds()) {
+                    return;
                 }
+                signIn(editTextMail.getText().toString(), editTextPass.getText().toString());
             }
         });
 
@@ -116,16 +129,14 @@ public class AuthActivity extends AppCompatActivity {
                 });
     }
 
-    private boolean checkEditFilds(){
-        boolean isOk = false;
-
-        String email= editTextMail.getText().toString();
+    private boolean checkEditFilds() {
+        boolean isOk = true;
+        String email = editTextMail.getText().toString();
         if (TextUtils.isEmpty(email)) {
             editTextMail.setError("Required.");
             isOk = false;
         } else {
             editTextMail.setError(null);
-            isOk = true;
         }
 
         String password = editTextPass.getText().toString();
@@ -134,7 +145,6 @@ public class AuthActivity extends AppCompatActivity {
             isOk = false;
         } else {
             editTextPass.setError(null);
-            isOk = true;
         }
         return isOk;
     }

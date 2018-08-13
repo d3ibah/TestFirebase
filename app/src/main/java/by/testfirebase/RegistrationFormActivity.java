@@ -2,13 +2,18 @@ package by.testfirebase;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,14 +30,17 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
     public static final String USERS_CHILD = "usersList";
-    private Button buttonReg;
+    private Button buttonReg, buttonClear;
     private EditText etMail, etPass, etName, etSurname, etAge;
+    private TextView tvGender;
     private String userMail, userPassword, userName, userSurname, userGender, userAge;
     private RadioButton radioButtonMale, radioButtonFemale;
+    private RadioGroup radioGroup;
 
     private FirebaseAuth mAuth;
-
     private DatabaseReference databaseReference;
+
+
 
     public static final String MALE = "male";
     public static final String FEMALE = "female";
@@ -44,13 +52,16 @@ public class RegistrationFormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration_form);
 
         buttonReg = findViewById(R.id.buttonRegForm);
+        buttonClear = findViewById(R.id.buttonClear);
         etMail = findViewById(R.id.etMail);
         etPass = findViewById(R.id.etPass);
         etName = findViewById(R.id.etName);
         etSurname = findViewById(R.id.etSurname);
         radioButtonMale = findViewById(R.id.radioButtonMale);
         radioButtonFemale = findViewById(R.id.radioButtonFemale);
+        radioGroup = findViewById(R.id.radioGroup);
         etAge = findViewById(R.id.etAge);
+        tvGender = findViewById(R.id.tvGender);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -72,9 +83,11 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 switch (rb.getId()) {
                     case R.id.radioButtonMale:
                         userGender = MALE;
+                        tvGender.setError(null);
                         break;
                     case R.id.radioButtonFemale:
                         userGender = FEMALE;
+                        tvGender.setError(null);
                         break;
                 }
             }
@@ -86,20 +99,90 @@ public class RegistrationFormActivity extends AppCompatActivity {
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                acceptFromFieldsInfo();
+
+                if(!checkAndAcceptFromFieldsInfo()){
+                    showDialogInfo();
+                    return;
+                }
                 createAccount(userMail, userPassword, userName, userSurname, userGender, userAge);
 
+            }
+        });
 
+        buttonClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAllFields();
             }
         });
     }
 
-    private void acceptFromFieldsInfo() {
+    private boolean checkAndAcceptFromFieldsInfo() {
+        boolean isOk = true;
         userMail = etMail.getText().toString();
+        if (TextUtils.isEmpty(userMail)) {
+            etMail.setError("Required.");
+            isOk = false;
+        } else {
+            etMail.setError(null);
+        }
+
         userPassword = etPass.getText().toString();
+        if (TextUtils.isEmpty(userPassword)) {
+            etPass.setError("Required.");
+            isOk = false;
+        } else {
+            etPass.setError(null);
+        }
+
         userName = etName.getText().toString();
+        if (TextUtils.isEmpty(userName)) {
+            etName.setError("Required.");
+            isOk = false;
+        } else {
+            etName.setError(null);
+        }
+
         userSurname = etSurname.getText().toString();
+        if (TextUtils.isEmpty(userSurname)) {
+            etSurname.setError("Required.");
+            isOk = false;
+        } else {
+            etSurname.setError(null);
+        }
+
         userAge = etAge.getText().toString();
+        if (TextUtils.isEmpty(userAge)) {
+            etAge.setError("Required.");
+            isOk = false;
+        } else {
+            etAge.setError(null);
+        }
+
+        if (TextUtils.isEmpty(userGender)) {
+            tvGender.setError("Required.");
+            isOk = false;
+        } else {
+            tvGender.setError(null);
+        }
+        return isOk;
+
+    }
+
+    private void clearAllFields(){
+        etMail.setText("");
+        etMail.setError(null);
+        etPass.setText("");
+        etPass.setError(null);
+        etName.setText("");
+        etName.setError(null);
+        etSurname.setText("");
+        etSurname.setError(null);
+        etAge.setText("");
+        etAge.setError(null);
+        radioGroup.clearCheck();
+        userGender = "";
+        tvGender.setError(null);
     }
 
     private void createAccount(final String email, final String password, final String name, final String surname, final String gender, final String age) {
@@ -121,8 +204,9 @@ public class RegistrationFormActivity extends AppCompatActivity {
                             FirebaseDatabase.getInstance().getReference().push()
                                     .setValue(new User(FirebaseAuth.getInstance().getCurrentUser().getUid(), email, password, name, surname, gender, age));
 
-                            Intent intent = new Intent(RegistrationFormActivity.this, AddAndShowActivity.class);
+                            Intent intent = new Intent(RegistrationFormActivity.this, Main2Activity.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -132,5 +216,11 @@ public class RegistrationFormActivity extends AppCompatActivity {
                     }
                 });
         // [END create_user_with_email]
+    }
+    private void showDialogInfo(){
+        FragmentManager manager = getSupportFragmentManager();
+        DialogInfo dialogInfo = new DialogInfo();
+        FragmentTransaction transaction = manager.beginTransaction();
+        dialogInfo.show(transaction, "dialog");
     }
 }
