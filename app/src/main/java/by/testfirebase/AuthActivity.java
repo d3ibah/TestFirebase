@@ -94,8 +94,7 @@ public class AuthActivity extends AppCompatActivity {
         buttonNavDr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AuthActivity.this, Main2Activity.class);
-                startActivity(intent);
+                signIn("ar@tu.ru", "123456");
             }
         });
 

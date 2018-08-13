@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import by.testfirebase.dataModel.Article;
@@ -26,6 +27,7 @@ public class FragmentShowBlog extends Fragment{
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = database.getReference();
     private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
     private List<Article> articleArrayList = new ArrayList<>();
     private ShowAdapter showAdapter;
 
@@ -38,7 +40,11 @@ public class FragmentShowBlog extends Fragment{
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
         showAdapter = new ShowAdapter(articleArrayList);
         recyclerView.setAdapter(showAdapter);
 
