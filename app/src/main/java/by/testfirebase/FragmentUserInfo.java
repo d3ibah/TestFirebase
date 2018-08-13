@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,11 +21,11 @@ import by.testfirebase.dataModel.User;
 
 public class FragmentUserInfo extends Fragment {
 
-    TextView email, name, surname, gender, age;
-    private FirebaseDatabase database;
+    private TextView email, name, surname, gender, age;
     private DatabaseReference databaseReference;
     public static final String USERS_CHILD = "usersList";
-    User user;
+    private String userUId;
+    private User user;
 
 
     @Nullable
@@ -38,14 +39,14 @@ public class FragmentUserInfo extends Fragment {
         gender = rootView.findViewById(R.id.tvInfoGender);
         age = rootView.findViewById(R.id.tvInfoAge);
 
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference();
+        userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD).child(userUId);
 
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                user = dataSnapshot.getValue(User.class);
-//                setUserInfo(user);
+                user = dataSnapshot.getValue(User.class);
+                setUserInfo(user);
             }
 
             @Override
@@ -73,7 +74,7 @@ public class FragmentUserInfo extends Fragment {
     }
 
     private void setUserInfo(User user) {
-        email.setText(user.getEmail());
+        email.setText(user.getMail());
         name.setText(user.getName());
         surname.setText(user.getSurname());
         gender.setText(user.getGender());

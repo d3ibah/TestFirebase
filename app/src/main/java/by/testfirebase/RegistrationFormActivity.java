@@ -40,7 +40,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
 
-
+    private String userUId;
 
     public static final String MALE = "male";
     public static final String FEMALE = "female";
@@ -63,7 +63,11 @@ public class RegistrationFormActivity extends AppCompatActivity {
         etAge = findViewById(R.id.etAge);
         tvGender = findViewById(R.id.tvGender);
 
+
+// TODO
         mAuth = FirebaseAuth.getInstance();
+// TODO
+
 
     }
 
@@ -74,7 +78,6 @@ public class RegistrationFormActivity extends AppCompatActivity {
         etMail.setText(getIntent().getStringExtra("regMail"));
         etPass.setText(getIntent().getStringExtra("regPass"));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD);
 
         View.OnClickListener radioButtonClckListnr = new View.OnClickListener() {
             @Override
@@ -100,11 +103,14 @@ public class RegistrationFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(!checkAndAcceptFromFieldsInfo()){
+                if (!checkAndAcceptFromFieldsInfo()) {
                     showDialogInfo();
+                    Log.e("AAAA", "pressed RegBatton, ET heve empty fields");
                     return;
+
                 }
                 createAccount(userMail, userPassword, userName, userSurname, userGender, userAge);
+                Log.e("AAAA", "pressed RegBatton, start CreateAccaunt");
 
             }
         });
@@ -169,7 +175,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
     }
 
-    private void clearAllFields(){
+    private void clearAllFields() {
         etMail.setText("");
         etMail.setError(null);
         etPass.setText("");
@@ -194,6 +200,9 @@ public class RegistrationFormActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Log.e("AAAA", "task.isSuccessful(), start createUserWithEmailAndPassword");
+                            userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD).child(userUId);
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -201,8 +210,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
                             Toast.makeText(RegistrationFormActivity.this, "Create user is successful." + user.getEmail(),
                                     Toast.LENGTH_SHORT).show();
 
-                            FirebaseDatabase.getInstance().getReference().push()
-                                    .setValue(new User(FirebaseAuth.getInstance().getCurrentUser().getUid(), email, password, name, surname, gender, age));
+                            databaseReference.push()
+                                    .setValue(new User(userUId, email, password, name, surname, gender, age));
 
                             Intent intent = new Intent(RegistrationFormActivity.this, Main2Activity.class);
                             startActivity(intent);
@@ -217,7 +226,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 });
         // [END create_user_with_email]
     }
-    private void showDialogInfo(){
+
+    private void showDialogInfo() {
         FragmentManager manager = getSupportFragmentManager();
         DialogInfo dialogInfo = new DialogInfo();
         FragmentTransaction transaction = manager.beginTransaction();

@@ -9,6 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,12 +27,12 @@ import by.testfirebase.dataModel.Article;
 public class FragmentShowBlog extends Fragment{
 
     public static final String MESSAGES_CHILD = "messages";
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = database.getReference();
+    private DatabaseReference databaseReference;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private List<Article> articleArrayList = new ArrayList<>();
     private ShowAdapter showAdapter;
+    private String userUId;
 
     private Article article;
 
@@ -39,6 +42,9 @@ public class FragmentShowBlog extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_show_blog, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
+
+        userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(MESSAGES_CHILD).child(userUId);
 
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         linearLayoutManager.setReverseLayout(true);

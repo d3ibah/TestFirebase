@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,68 +25,31 @@ public class FragmentAdd extends Fragment{
     private EditText etText;
     private Button buttonAdd;
     public static final String MESSAGES_CHILD = "messages";
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = database.getReference();
-    private RecyclerView recyclerView;
-    private List<Article> articleArrayList = new ArrayList<>();
-    private ShowAdapter showAdapter;
+//    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference/* = database.getReference()*/;
+    private String userUId;
 
-    private Article article;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add, container, false);
-        Log.e("AAAA", "showFragOnCreateView");
+
         etText = rootView.findViewById(R.id.editTextMessage);
         buttonAdd = rootView.findViewById(R.id.buttonAdd);
-        recyclerView = rootView.findViewById(R.id.recyclerView);
 
-//        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-//        showAdapter = new ShowAdapter(articleArrayList);
-//        recyclerView.setAdapter(showAdapter);
-
-        Log.e("AAAA", "showFragOnCreateView after GetActiviry");
+        userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(MESSAGES_CHILD).child(userUId);
 
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Article article = new Article(FirebaseAuth.getInstance().getCurrentUser().getEmail(), etText.getText().toString());
+                Article article = new Article(userUId, etText.getText().toString());
                 databaseReference.push().setValue(article);
                 etText.setText("");
             }
         });
 
-//        databaseReference.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                article = dataSnapshot.getValue(Article.class);
-//                articleArrayList.add(article);
-//                showAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//                article = dataSnapshot.getValue(Article.class);
-//                articleArrayList.remove(article);
-//                showAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
         return rootView;
     }

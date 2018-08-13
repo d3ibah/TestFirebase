@@ -3,7 +3,7 @@ package by.testfirebase.dataModel;
 public class User {
 
     private String uId;
-    private String eMail;
+    private String mail;
     private String password;
     private String name;
     private String surname;
@@ -11,9 +11,9 @@ public class User {
     private String age;
 
 
-    public User(String uId, String eMail, String password, String name, String surname, String gender, String  age) {
+    public User(String uId, String mail, String password, String name, String surname, String gender, String  age) {
         this.uId = uId;
-        this.eMail = eMail;
+        this.mail = mail;
         this.password = password;
         this.name = name;
         this.surname = surname;
@@ -25,12 +25,12 @@ public class User {
     public User() {
     }
 
-    public String getEmail() {
-        return eMail;
+    public String getMail() {
+        return mail;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public String getPassword() {
