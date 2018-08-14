@@ -22,13 +22,14 @@ import com.google.firebase.auth.FirebaseUser;
 public class AuthActivity extends BaseActivity {
 
     private EditText editTextMail, editTextPass;
-    private Button buttonSignIn, buttonReg, buttonNavDr;
+    private Button buttonSignIn, buttonReg;
     ImageView ivVisiblePass, ivInfo;
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
     private boolean flagShowPass = false;
+    private String errorMessage;
 
 
     @Override
@@ -40,9 +41,10 @@ public class AuthActivity extends BaseActivity {
         editTextPass = findViewById(R.id.editTextPass);
         buttonSignIn = findViewById(R.id.buttonSignIn);
         buttonReg = findViewById(R.id.buttonReg);
-        buttonNavDr = findViewById(R.id.buttonNavDr);
         ivVisiblePass = findViewById(R.id.ivShowHide);
         ivInfo = findViewById(R.id.ivInfo);
+
+        errorMessage = (getResources().getText(R.string.field_is_empty)).toString();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -91,13 +93,6 @@ public class AuthActivity extends BaseActivity {
             }
         });
 
-        buttonNavDr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn("ar@tu.ru", "123456");
-            }
-        });
-
         ivVisiblePass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,7 +130,7 @@ public class AuthActivity extends BaseActivity {
         boolean isOk = true;
         String email = editTextMail.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            editTextMail.setError("Required.");
+            editTextMail.setError(errorMessage);
             isOk = false;
         } else {
             editTextMail.setError(null);
@@ -143,7 +138,7 @@ public class AuthActivity extends BaseActivity {
 
         String password = editTextPass.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            editTextPass.setError("Required.");
+            editTextPass.setError(errorMessage);
             isOk = false;
         } else {
             editTextPass.setError(null);

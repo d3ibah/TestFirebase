@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +34,8 @@ public class FragmentAdd extends Fragment{
         etText = rootView.findViewById(R.id.editTextMessage);
         buttonAdd = rootView.findViewById(R.id.buttonAdd);
 
+        getActivity().setTitle(R.string.add_notes);
+
         if (FirebaseAuth.getInstance() != null) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {
@@ -42,13 +45,20 @@ public class FragmentAdd extends Fragment{
                     buttonAdd.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Article article = new Article(userUId, etText.getText().toString());
-                            databaseReference.push().setValue(article);
-                            etText.setText("");
+                            if(!etText.getText().toString().equals("")) {
+                                Article article = new Article(userUId, etText.getText().toString());
+                                databaseReference.push().setValue(article);
+                                etText.setText("");
+                            } else {
+                                if(getActivity().getApplicationContext() != null) {
+                                    Toast.makeText(getActivity().getApplicationContext(), R.string.field_is_empty, Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                     });
 
                 }}}
+
         return rootView;
     }
 }

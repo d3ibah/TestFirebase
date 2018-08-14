@@ -39,4 +39,5 @@
     <string name="logout">Logout</string>
     <string name="max_length_message">*The maximum message length is limited to 100 characters.</string>
     <string name="loading">Loading...</string>
+    <string name="field_is_empty">Field is empty!</string>
 </resources>

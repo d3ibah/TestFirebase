@@ -39,6 +39,8 @@ public class FragmentUserInfo extends Fragment {
         gender = rootView.findViewById(R.id.tvInfoGender);
         age = rootView.findViewById(R.id.tvInfoAge);
 
+        getActivity().setTitle(R.string.profile);
+
         if (FirebaseAuth.getInstance() != null) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {

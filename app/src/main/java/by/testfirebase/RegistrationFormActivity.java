@@ -39,6 +39,7 @@ public class RegistrationFormActivity extends BaseActivity {
     private DatabaseReference databaseReference;
 
     private String userUId;
+    private String errorMessage;
 
     public static final String MALE = "male";
     public static final String FEMALE = "female";
@@ -60,6 +61,8 @@ public class RegistrationFormActivity extends BaseActivity {
         radioGroup = findViewById(R.id.radioGroup);
         etAge = findViewById(R.id.etAge);
         tvGender = findViewById(R.id.tvGender);
+
+        errorMessage = (getResources().getText(R.string.field_is_empty)).toString();
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -117,7 +120,7 @@ public class RegistrationFormActivity extends BaseActivity {
         boolean isOk = true;
         userMail = etMail.getText().toString();
         if (TextUtils.isEmpty(userMail)) {
-            etMail.setError("Required.");
+            etMail.setError(errorMessage);
             isOk = false;
         } else {
             etMail.setError(null);
@@ -125,7 +128,7 @@ public class RegistrationFormActivity extends BaseActivity {
 
         userPassword = etPass.getText().toString();
         if (TextUtils.isEmpty(userPassword)) {
-            etPass.setError("Required.");
+            etPass.setError(errorMessage);
             isOk = false;
         } else {
             etPass.setError(null);
@@ -133,7 +136,7 @@ public class RegistrationFormActivity extends BaseActivity {
 
         userName = etName.getText().toString();
         if (TextUtils.isEmpty(userName)) {
-            etName.setError("Required.");
+            etName.setError(errorMessage);
             isOk = false;
         } else {
             etName.setError(null);
@@ -141,7 +144,7 @@ public class RegistrationFormActivity extends BaseActivity {
 
         userSurname = etSurname.getText().toString();
         if (TextUtils.isEmpty(userSurname)) {
-            etSurname.setError("Required.");
+            etSurname.setError(errorMessage);
             isOk = false;
         } else {
             etSurname.setError(null);
@@ -149,14 +152,14 @@ public class RegistrationFormActivity extends BaseActivity {
 
         userAge = etAge.getText().toString();
         if (TextUtils.isEmpty(userAge)) {
-            etAge.setError("Required.");
+            etAge.setError(errorMessage);
             isOk = false;
         } else {
             etAge.setError(null);
         }
 
         if (TextUtils.isEmpty(userGender)) {
-            tvGender.setError("Required.");
+            tvGender.setError(errorMessage);
             isOk = false;
         } else {
             tvGender.setError(null);

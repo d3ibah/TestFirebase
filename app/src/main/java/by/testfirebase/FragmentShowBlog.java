@@ -25,7 +25,7 @@ import java.util.List;
 
 import by.testfirebase.dataModel.Article;
 
-public class FragmentShowBlog extends Fragment{
+public class FragmentShowBlog extends Fragment {
 
     public static final String MESSAGES_CHILD = "messages";
     private DatabaseReference databaseReference;
@@ -46,17 +46,20 @@ public class FragmentShowBlog extends Fragment{
         recyclerView = rootView.findViewById(R.id.recyclerView);
         buttonGoToFragmentAdd = rootView.findViewById(R.id.buttonGoToAdd);
 
+        getActivity().setTitle(R.string.home);
+
         buttonGoToFragmentAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    showFragmentAdd(false);
+                showFragmentAdd();
             }
         });
 
-
-        linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
+        if (getActivity().getApplicationContext() != null) {
+            linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+            linearLayoutManager.setReverseLayout(true);
+            linearLayoutManager.setStackFromEnd(true);
+        }
 
         recyclerView.setLayoutManager(linearLayoutManager);
         showAdapter = new ShowAdapter(articleArrayList);
@@ -65,7 +68,6 @@ public class FragmentShowBlog extends Fragment{
         if (FirebaseAuth.getInstance() != null) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {
-
                     userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     databaseReference = FirebaseDatabase.getInstance().getReference().child(MESSAGES_CHILD).child(userUId);
                     databaseReference.addChildEventListener(new ChildEventListener() {
@@ -106,16 +108,10 @@ public class FragmentShowBlog extends Fragment{
         return rootView;
     }
 
-    public void showFragmentAdd(boolean addToBackStack) {
+    public void showFragmentAdd() {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         FragmentAdd fragment = new FragmentAdd();
-//        FragmentShowBlog fragmentShowBlog = this;
-        fragmentTransaction.replace(R.id.container, fragment, null);
-        if (addToBackStack) {
-            fragmentTransaction.addToBackStack(null);
-        }
-//        fragmentTransaction.remove(fragmentShowBlog);
-        fragmentTransaction.commit();
+        fragmentTransaction.replace(R.id.container, fragment, null).addToBackStack(null).commit();
     }
 }

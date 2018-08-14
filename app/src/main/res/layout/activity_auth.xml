@@ -78,15 +78,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.35" />
 
-    <Button
-        android:id="@+id/buttonNavDr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ImageView
         android:id="@+id/ivShowHide"
         android:layout_width="wrap_content"
