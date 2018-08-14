@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import by.testfirebase.dataModel.Article;
 
 public class FragmentAdd extends Fragment{
@@ -25,8 +21,7 @@ public class FragmentAdd extends Fragment{
     private EditText etText;
     private Button buttonAdd;
     public static final String MESSAGES_CHILD = "messages";
-//    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference/* = database.getReference()*/;
+    private DatabaseReference databaseReference;
     private String userUId;
 
 

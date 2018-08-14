@@ -7,13 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -28,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import by.testfirebase.dataModel.User;
 
 
-public class Main2Activity extends AppCompatActivity
+public class Main2Activity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
@@ -39,7 +36,6 @@ public class Main2Activity extends AppCompatActivity
     private DatabaseReference databaseReference;
     public static final String USERS_CHILD = "usersList";
     private String userUId;
-//    private Bundle savedInstanceState;
 
     private Fragment fragment = null;
     private Class fragmentClass = null;
@@ -49,7 +45,6 @@ public class Main2Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-//        this.savedInstanceState = savedInstanceState;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -86,7 +81,7 @@ public class Main2Activity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+                super.onBackPressed();
         }
     }
 
@@ -104,21 +99,6 @@ public class Main2Activity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile) {
             fragmentClass = FragmentUserInfo.class;
-//        if (id == R.id.nav_home) {
-//            if (savedInstanceState == null) {
-//                showFragmentBlog(false);
-//            }
-//
-//        } else if (id == R.id.nav_add) {
-//
-//            if (savedInstanceState == null) {
-//                showFragmentAdd(false);
-//            }
-//
-//        } else if (id == R.id.nav_profile) {
-//            if (savedInstanceState == null) {
-//                showFragmentUserInfo(false);
-//            }
 
         } else if (id == R.id.nav_logout) {
             fragmentManager.beginTransaction().detach(fragment).commit();
@@ -143,53 +123,16 @@ public class Main2Activity extends AppCompatActivity
         return true;
     }
 
-//    public void showFragmentAdd(boolean addToBackStack) {
-//        Log.e("AAAA", "showFragMain");
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        FragmentAdd fragment = new FragmentAdd();
-//        fragmentTransaction.replace(R.id.container, fragment, null);
-//        if (addToBackStack) {
-//            fragmentTransaction.addToBackStack(null);
-//        }
-//        fragmentTransaction.commit();
-//    }
-
     public void showFragmentBlog(boolean addToBackStack) {
-//
         fragmentClass = FragmentShowBlog.class;
         try {
-            fragment = (Fragment)fragmentClass.newInstance();
-        }
-        catch (Exception e){
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack(null).commit();
-//        item.setCheckable(true);
-//        setTitle(item.getTitle());
-
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        FragmentShowBlog fragment = new FragmentShowBlog();
-//        fragmentTransaction.replace(R.id.container, fragment, null);
-//        if (addToBackStack) {
-//            fragmentTransaction.addToBackStack(null);
-//        }
-//        fragmentTransaction.commit();
     }
-
-//    public void showFragmentUserInfo(boolean addToBackStack) {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        FragmentUserInfo fragment = new FragmentUserInfo();
-//        fragmentTransaction.replace(R.id.container, fragment, null);
-//        if (addToBackStack) {
-//            fragmentTransaction.addToBackStack(null);
-//        }
-//        fragmentTransaction.commit();
-//    }
 
     private void changeNavHeader() {
         tvUserMail.setText(mAuth.getCurrentUser().getEmail());

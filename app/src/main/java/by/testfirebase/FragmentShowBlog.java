@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,9 +49,7 @@ public class FragmentShowBlog extends Fragment{
         buttonGoToFragmentAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (savedInstanceState == null) {
                     showFragmentAdd(false);
-                }
             }
         });
 
@@ -113,7 +110,7 @@ public class FragmentShowBlog extends Fragment{
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         FragmentAdd fragment = new FragmentAdd();
-        FragmentShowBlog fragmentShowBlog = this;
+//        FragmentShowBlog fragmentShowBlog = this;
         fragmentTransaction.replace(R.id.container, fragment, null);
         if (addToBackStack) {
             fragmentTransaction.addToBackStack(null);

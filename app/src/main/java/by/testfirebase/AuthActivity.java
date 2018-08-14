@@ -1,11 +1,10 @@
 package by.testfirebase;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -20,7 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class AuthActivity extends AppCompatActivity {
+public class AuthActivity extends BaseActivity {
 
     private EditText editTextMail, editTextPass;
     private Button buttonSignIn, buttonReg, buttonNavDr;
@@ -75,6 +74,7 @@ public class AuthActivity extends AppCompatActivity {
                 if (!checkEditFilds()) {
                     return;
                 }
+                buttonReg.setEnabled(false);
                 signIn(editTextMail.getText().toString(), editTextPass.getText().toString());
             }
         });
@@ -107,12 +107,12 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void signIn(String email, String password) {
+        showProgressDialog();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            buttonReg.setEnabled(false);
                             user = mAuth.getCurrentUser();
                             Toast.makeText(AuthActivity.this, "Sign In is successful." + user.getEmail(),
                                     Toast.LENGTH_SHORT).show();
@@ -126,6 +126,7 @@ public class AuthActivity extends AppCompatActivity {
                             Toast.makeText(AuthActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+                        hideProgressDialog();
                     }
                 });
     }

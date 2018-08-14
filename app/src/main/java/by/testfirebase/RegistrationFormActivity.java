@@ -1,13 +1,11 @@
 package by.testfirebase;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import by.testfirebase.dataModel.User;
 
-public class RegistrationFormActivity extends AppCompatActivity {
+public class RegistrationFormActivity extends BaseActivity {
 
     private static final String TAG = "EmailPassword";
     public static final String USERS_CHILD = "usersList";
@@ -63,12 +61,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
         etAge = findViewById(R.id.etAge);
         tvGender = findViewById(R.id.tvGender);
 
-
-// TODO
         mAuth = FirebaseAuth.getInstance();
-// TODO
-
-
     }
 
     @Override
@@ -105,13 +98,10 @@ public class RegistrationFormActivity extends AppCompatActivity {
 
                 if (!checkAndAcceptFromFieldsInfo()) {
                     showDialogInfo();
-                    Log.e("AAAA", "pressed RegBatton, ET heve empty fields");
                     return;
-
                 }
+                buttonReg.setEnabled(false);
                 createAccount(userMail, userPassword, userName, userSurname, userGender, userAge);
-                Log.e("AAAA", "pressed RegBatton, start CreateAccaunt");
-
             }
         });
 
@@ -192,22 +182,18 @@ public class RegistrationFormActivity extends AppCompatActivity {
     }
 
     private void createAccount(final String email, final String password, final String name, final String surname, final String gender, final String age) {
-        Log.d(TAG, "createAccount:" + email);
 
-        // [START create_user_with_email]
+        showProgressDialog();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             buttonReg.setEnabled(false);
-                            Log.e("AAAA", "task.isSuccessful(), start createUserWithEmailAndPassword");
                             userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD).child(userUId);
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Log.e(TAG, user.getEmail());
                             Toast.makeText(RegistrationFormActivity.this, "Create user is successful." + user.getEmail(),
                                     Toast.LENGTH_SHORT).show();
 
@@ -218,15 +204,13 @@ public class RegistrationFormActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            // If sign in fails, display a message to the user.
                             buttonReg.setEnabled(true);
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(RegistrationFormActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+                        hideProgressDialog();
                     }
                 });
-        // [END create_user_with_email]
     }
 
     private void showDialogInfo() {
