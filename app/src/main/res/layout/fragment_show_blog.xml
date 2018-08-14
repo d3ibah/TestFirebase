@@ -11,11 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:background="#bdbdbdbd"
+        android:background="@color/divider_color"
         android:drawableEnd="@drawable/ic_playlist_add_black_24dp"
-        android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:text="Add new post"
+        android:paddingStart="24dp"
+        android:text="@string/add_new_post"
+        android:textAlignment="center"
         android:textSize="16sp" />
 
     <android.support.v7.widget.RecyclerView

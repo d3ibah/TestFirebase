@@ -10,4 +10,32 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="input_e_mail">Input e-mail</string>
+    <string name="input_pass">Input password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="registration">Registration</string>
+    <string name="input_name">Input name</string>
+    <string name="input_surname">Input surname</string>
+    <string name="input_age">Input age</string>
+    <string name="select_your_gender">Select your gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="clear_all_fields">Clear all fields</string>
+    <string name="reg_warning">To check in, you must fill in all the fields!</string>
+    <string name="input_your_message">Input your message</string>
+    <string name="save_text">Save text</string>
+    <string name="text_fragment_dialog_info">You must fill in all the fields.  Attention!  You must specify a complete e-mail  and  the password must contain at least 6 characters</string>
+    <string name="close_info">Close info</string>
+    <string name="add_new_post">Add new notes</string>
+    <string name="info_about_user">Info about user</string>
+    <string name="e_mail">e-mail:</string>
+    <string name="name">Name:</string>
+    <string name="surname">Surname:</string>
+    <string name="gender">Gender:</string>
+    <string name="age">Age:</string>
+    <string name="home">Home</string>
+    <string name="add_notes">Add notes</string>
+    <string name="profile">Profile</string>
+    <string name="logout">Logout</string>
+    <string name="max_length_message">*The maximum message length is limited to 100 characters.</string>
 </resources>
