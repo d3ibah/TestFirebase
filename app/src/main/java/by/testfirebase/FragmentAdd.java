@@ -38,19 +38,22 @@ public class FragmentAdd extends Fragment{
         etText = rootView.findViewById(R.id.editTextMessage);
         buttonAdd = rootView.findViewById(R.id.buttonAdd);
 
-        userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(MESSAGES_CHILD).child(userUId);
+        if (FirebaseAuth.getInstance() != null) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {
+                    userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child(MESSAGES_CHILD).child(userUId);
 
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Article article = new Article(userUId, etText.getText().toString());
-                databaseReference.push().setValue(article);
-                etText.setText("");
-            }
-        });
+                    buttonAdd.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Article article = new Article(userUId, etText.getText().toString());
+                            databaseReference.push().setValue(article);
+                            etText.setText("");
+                        }
+                    });
 
-
+                }}}
         return rootView;
     }
 }

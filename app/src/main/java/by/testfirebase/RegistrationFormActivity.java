@@ -200,6 +200,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            buttonReg.setEnabled(false);
                             Log.e("AAAA", "task.isSuccessful(), start createUserWithEmailAndPassword");
                             userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD).child(userUId);
@@ -218,6 +219,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
+                            buttonReg.setEnabled(true);
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(RegistrationFormActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();

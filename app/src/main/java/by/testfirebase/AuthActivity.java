@@ -112,6 +112,7 @@ public class AuthActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            buttonReg.setEnabled(false);
                             user = mAuth.getCurrentUser();
                             Toast.makeText(AuthActivity.this, "Sign In is successful." + user.getEmail(),
                                     Toast.LENGTH_SHORT).show();
@@ -121,6 +122,7 @@ public class AuthActivity extends AppCompatActivity {
                             finish();
 
                         } else {
+                            buttonReg.setEnabled(false);
                             Toast.makeText(AuthActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }

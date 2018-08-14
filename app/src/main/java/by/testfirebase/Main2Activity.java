@@ -41,6 +41,10 @@ public class Main2Activity extends AppCompatActivity
     private String userUId;
 //    private Bundle savedInstanceState;
 
+    private Fragment fragment = null;
+    private Class fragmentClass = null;
+    private FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +63,15 @@ public class Main2Activity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        fragmentManager = getSupportFragmentManager();
 
         mAuth = FirebaseAuth.getInstance();
         userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD).child(userUId);
 
-        showFragmentBlog(false);
+        if (savedInstanceState == null) {
+            showFragmentBlog(false);
+        }
 
         View headerLayout = navigationView.getHeaderView(0);
         tvUserMail = headerLayout.findViewById(R.id.tvUserMail);
@@ -88,9 +95,6 @@ public class Main2Activity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-       Fragment fragment = null;
-        Class fragmentClass = null;
 
         if (id == R.id.nav_home) {
             fragmentClass = FragmentShowBlog.class;
@@ -117,6 +121,7 @@ public class Main2Activity extends AppCompatActivity
 //            }
 
         } else if (id == R.id.nav_logout) {
+            fragmentManager.beginTransaction().detach(fragment).commit();
             mAuth.signOut();
             Intent intent = new Intent(Main2Activity.this, AuthActivity.class);
             startActivity(intent);
@@ -130,49 +135,61 @@ public class Main2Activity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack(null).commit();
         item.setCheckable(true);
         setTitle(item.getTitle());
-
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void showFragmentAdd(boolean addToBackStack) {
-        Log.e("AAAA", "showFragMain");
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        FragmentAdd fragment = new FragmentAdd();
-        fragmentTransaction.replace(R.id.container, fragment, null);
-        if (addToBackStack) {
-            fragmentTransaction.addToBackStack(null);
-        }
-        fragmentTransaction.commit();
-    }
+//    public void showFragmentAdd(boolean addToBackStack) {
+//        Log.e("AAAA", "showFragMain");
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        FragmentAdd fragment = new FragmentAdd();
+//        fragmentTransaction.replace(R.id.container, fragment, null);
+//        if (addToBackStack) {
+//            fragmentTransaction.addToBackStack(null);
+//        }
+//        fragmentTransaction.commit();
+//    }
 
     public void showFragmentBlog(boolean addToBackStack) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        FragmentShowBlog fragment = new FragmentShowBlog();
-        fragmentTransaction.replace(R.id.container, fragment, null);
-        if (addToBackStack) {
-            fragmentTransaction.addToBackStack(null);
+//
+        fragmentClass = FragmentShowBlog.class;
+        try {
+            fragment = (Fragment)fragmentClass.newInstance();
         }
-        fragmentTransaction.commit();
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack(null).commit();
+//        item.setCheckable(true);
+//        setTitle(item.getTitle());
+
+
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        FragmentShowBlog fragment = new FragmentShowBlog();
+//        fragmentTransaction.replace(R.id.container, fragment, null);
+//        if (addToBackStack) {
+//            fragmentTransaction.addToBackStack(null);
+//        }
+//        fragmentTransaction.commit();
     }
 
-    public void showFragmentUserInfo(boolean addToBackStack) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        FragmentUserInfo fragment = new FragmentUserInfo();
-        fragmentTransaction.replace(R.id.container, fragment, null);
-        if (addToBackStack) {
-            fragmentTransaction.addToBackStack(null);
-        }
-        fragmentTransaction.commit();
-    }
+//    public void showFragmentUserInfo(boolean addToBackStack) {
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        FragmentUserInfo fragment = new FragmentUserInfo();
+//        fragmentTransaction.replace(R.id.container, fragment, null);
+//        if (addToBackStack) {
+//            fragmentTransaction.addToBackStack(null);
+//        }
+//        fragmentTransaction.commit();
+//    }
 
     private void changeNavHeader() {
         tvUserMail.setText(mAuth.getCurrentUser().getEmail());

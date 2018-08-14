@@ -41,14 +41,21 @@ public class FragmentShowBlog extends Fragment{
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_show_blog, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
         buttonGoToFragmentAdd = rootView.findViewById(R.id.buttonGoToAdd);
 
-        userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(MESSAGES_CHILD).child(userUId);
+        buttonGoToFragmentAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (savedInstanceState == null) {
+                    showFragmentAdd(false);
+                }
+            }
+        });
+
 
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         linearLayoutManager.setReverseLayout(true);
@@ -58,43 +65,46 @@ public class FragmentShowBlog extends Fragment{
         showAdapter = new ShowAdapter(articleArrayList);
         recyclerView.setAdapter(showAdapter);
 
-        buttonGoToFragmentAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showFragmentAdd(false);
+        if (FirebaseAuth.getInstance() != null) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {
+
+                    userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child(MESSAGES_CHILD).child(userUId);
+                    databaseReference.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            article = dataSnapshot.getValue(Article.class);
+                            articleArrayList.add(article);
+                            showAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                            article = dataSnapshot.getValue(Article.class);
+                            articleArrayList.remove(article);
+                            showAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
             }
-        });
+        }
 
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                article = dataSnapshot.getValue(Article.class);
-                articleArrayList.add(article);
-                showAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                article = dataSnapshot.getValue(Article.class);
-                articleArrayList.remove(article);
-                showAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         return rootView;
     }
@@ -103,10 +113,12 @@ public class FragmentShowBlog extends Fragment{
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         FragmentAdd fragment = new FragmentAdd();
+        FragmentShowBlog fragmentShowBlog = this;
         fragmentTransaction.replace(R.id.container, fragment, null);
-//        if (addToBackStack) {
-//            fragmentTransaction.addToBackStack(null);
-//        }
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
+//        fragmentTransaction.remove(fragmentShowBlog);
         fragmentTransaction.commit();
     }
 }
