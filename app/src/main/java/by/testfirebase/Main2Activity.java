@@ -41,9 +41,6 @@ public class Main2Activity extends BaseActivity
     private Class fragmentClass = null;
     private FragmentManager fragmentManager;
 
-    //
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +64,7 @@ public class Main2Activity extends BaseActivity
         databaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_CHILD).child(userUId);
 
         if (savedInstanceState == null) {
-            showFragmentBlog(false);
+            showFragmentBlog();
         }
 
         View headerLayout = navigationView.getHeaderView(0);
@@ -125,7 +122,7 @@ public class Main2Activity extends BaseActivity
         return true;
     }
 
-    public void showFragmentBlog(boolean addToBackStack) {
+    public void showFragmentBlog() {
         fragmentClass = FragmentShowBlog.class;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -133,7 +130,7 @@ public class Main2Activity extends BaseActivity
             e.printStackTrace();
         }
 
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().add(R.id.container, fragment).commit();
     }
 
     private void changeNavHeader() {
