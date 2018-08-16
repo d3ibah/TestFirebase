@@ -117,7 +117,7 @@ public class AuthActivity extends BaseActivity {
                             finish();
 
                         } else {
-                            buttonReg.setEnabled(false);
+                            buttonReg.setEnabled(true);
                             Toast.makeText(AuthActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
