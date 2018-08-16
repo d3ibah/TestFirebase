@@ -3,7 +3,6 @@ package by.testfirebase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +24,7 @@ import java.util.List;
 
 import by.testfirebase.dataModel.Article;
 
-public class FragmentShowBlog extends Fragment {
+public class FragmentShowBlog extends BaseFragment {
 
     public static final String MESSAGES_CHILD = "messages";
     private DatabaseReference databaseReference;
@@ -47,6 +46,10 @@ public class FragmentShowBlog extends Fragment {
         buttonGoToFragmentAdd = rootView.findViewById(R.id.buttonGoToAdd);
 
         getActivity().setTitle(R.string.home);
+
+        if (isOnline(getActivity().getApplicationContext())){
+            showProgressDialog();
+        }
 
         buttonGoToFragmentAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +76,7 @@ public class FragmentShowBlog extends Fragment {
                     databaseReference.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            hideProgressDialog();
                             article = dataSnapshot.getValue(Article.class);
                             articleArrayList.add(article);
                             showAdapter.notifyDataSetChanged();

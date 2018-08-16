@@ -4,16 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseFragment extends Fragment {
 
     public ProgressDialog progressDialog;
 
     public void showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
+            progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getString(R.string.loading));
             progressDialog.setIndeterminate(true);
         }

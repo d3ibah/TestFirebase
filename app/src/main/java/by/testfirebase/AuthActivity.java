@@ -73,11 +73,14 @@ public class AuthActivity extends BaseActivity {
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!checkEditFilds()) {
-                    return;
+                if (isOnline(getApplicationContext())) {
+                    if (!checkEditFilds()) {
+                        return;
+                    }
+
+                    buttonReg.setEnabled(false);
+                    signIn(editTextMail.getText().toString(), editTextPass.getText().toString());
                 }
-                buttonReg.setEnabled(false);
-                signIn(editTextMail.getText().toString(), editTextPass.getText().toString());
             }
         });
 

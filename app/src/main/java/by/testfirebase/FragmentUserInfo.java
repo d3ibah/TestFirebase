@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import by.testfirebase.dataModel.User;
 
-public class FragmentUserInfo extends Fragment {
+public class FragmentUserInfo extends BaseFragment {
 
     private TextView email, name, surname, gender, age;
     private DatabaseReference databaseReference;
@@ -41,6 +41,10 @@ public class FragmentUserInfo extends Fragment {
 
         getActivity().setTitle(R.string.profile);
 
+        if (isOnline(getActivity().getApplicationContext())){
+            showProgressDialog();
+        }
+
         if (FirebaseAuth.getInstance() != null) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {
@@ -50,6 +54,7 @@ public class FragmentUserInfo extends Fragment {
             databaseReference.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    hideProgressDialog();
                     user = dataSnapshot.getValue(User.class);
                     if(user != null) {
                         setUserInfo(user);

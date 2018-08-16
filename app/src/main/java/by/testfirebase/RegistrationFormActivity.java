@@ -98,13 +98,14 @@ public class RegistrationFormActivity extends BaseActivity {
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (!checkAndAcceptFromFieldsInfo()) {
-                    showDialogInfo();
-                    return;
+                if (isOnline(getApplicationContext())) {
+                    if (!checkAndAcceptFromFieldsInfo()) {
+                        showDialogInfo();
+                        return;
+                    }
+                    buttonReg.setEnabled(false);
+                    createAccount(userMail, userPassword, userName, userSurname, userGender, userAge);
                 }
-                buttonReg.setEnabled(false);
-                createAccount(userMail, userPassword, userName, userSurname, userGender, userAge);
             }
         });
 

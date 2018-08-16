@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import by.testfirebase.dataModel.Article;
 
-public class FragmentAdd extends Fragment{
+public class FragmentAdd extends BaseFragment {
 
     private EditText etText;
     private Button buttonAdd;
@@ -36,6 +36,12 @@ public class FragmentAdd extends Fragment{
 
         getActivity().setTitle(R.string.add_notes);
 
+        addPost();
+
+        return rootView;
+    }
+
+    private void addPost() {
         if (FirebaseAuth.getInstance() != null) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {
@@ -45,20 +51,22 @@ public class FragmentAdd extends Fragment{
                     buttonAdd.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(!etText.getText().toString().equals("")) {
-                                Article article = new Article(userUId, etText.getText().toString());
-                                databaseReference.push().setValue(article);
-                                etText.setText("");
-                            } else {
-                                if(getActivity().getApplicationContext() != null) {
-                                    Toast.makeText(getActivity().getApplicationContext(), R.string.field_is_empty, Toast.LENGTH_SHORT).show();
+                            if (isOnline(getActivity().getApplicationContext())) {
+                                if (!etText.getText().toString().equals("")) {
+                                    Article article = new Article(userUId, etText.getText().toString());
+                                    databaseReference.push().setValue(article);
+                                    etText.setText("");
+                                } else {
+                                    if (getActivity().getApplicationContext() != null) {
+                                        Toast.makeText(getActivity().getApplicationContext(), R.string.field_is_empty, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         }
                     });
 
-                }}}
-
-        return rootView;
+                }
+            }
+        }
     }
 }
